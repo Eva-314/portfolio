@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>李菁 Eva Li — Portfolio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&family=Noto+Serif+SC:wght@400;600&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          paper: '#F7F5F0', ink: '#1C1C1C', accent: '#C8724A',
+          muted: '#8A8680', surface: '#FFFFFF', border: '#E8E4DC',
+        },
+        fontFamily: {
+          serif: ['"Playfair Display"', '"Noto Serif SC"', 'serif'],
+          sans: ['Inter', '"Noto Sans SC"', 'system-ui', 'sans-serif'],
+        }
+      }
+    }
+  }
+</script>
+<style>
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: #F7F5F0; color: #1C1C1C; font-family: Inter, 'Noto Sans SC', system-ui, sans-serif; }
+  .fade-up { opacity: 0; transform: translateY(28px); transition: opacity 0.65s cubic-bezier(.25,.46,.45,.94), transform 0.65s cubic-bezier(.25,.46,.45,.94); }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+  .fade-up-delay-1 { transition-delay: 0.1s; }
+  .fade-up-delay-2 { transition-delay: 0.2s; }
+  .fade-up-delay-3 { transition-delay: 0.3s; }
+  .lang-btn { cursor: pointer; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; transition: all 0.25s; }
+  .lang-btn.active { background: #1C1C1C; color: #F7F5F0; }
+  .lang-btn:not(.active) { color: #8A8680; }
+  .exp-card { cursor: pointer; }
+  .exp-body { max-height: 0; overflow: hidden; transition: max-height 0.45s cubic-bezier(.25,.46,.45,.94), opacity 0.35s; opacity: 0; }
+  .exp-body.open { max-height: 900px; opacity: 1; }
+  .exp-toggle-icon { transition: transform 0.3s ease; }
+  .exp-card.open .exp-toggle-icon { transform: rotate(45deg); }
+  .card-hover { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+  .card-hover:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; backdrop-filter: blur(16px); background: rgba(247,245,240,0.88); border-bottom: 1px solid #E8E4DC; }
+  .section-label { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #8A8680; font-weight: 500; margin-bottom: 8px; }
+  .tag { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; background: #EEEAE1; color: #5C5750; }
+  .tag-accent { background: #F5E8DF; color: #C8724A; }
+  .divider { height: 1px; background: #E8E4DC; }
+  .timeline-dot { width: 8px; height: 8px; border-radius: 50%; background: #C8724A; flex-shrink: 0; margin-top: 7px; }
+  .skill-bar { height: 3px; background: #E8E4DC; border-radius: 2px; overflow: hidden; }
+  .skill-fill { height: 100%; background: #C8724A; border-radius: 2px; transform: scaleX(0); transform-origin: left; transition: transform 1s cubic-bezier(.25,.46,.45,.94); }
+  .award-pill { display: flex; align-items: flex-start; gap: 10px; padding: 14px 18px; background: white; border-radius: 12px; border: 1px solid #E8E4DC; }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-thumb { background: #D4CFC5; border-radius: 2px; }
+  .cn-content { display: block; }
+  .en-content { display: none; }
+  body.lang-en .cn-content { display: none; }
+  body.lang-en .en-content { display: block; }
+  .inline-cn { display: inline; }
+  .inline-en { display: none; }
+  body.lang-en .inline-cn { display: none; }
+  body.lang-en .inline-en { display: inline; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+    <a href="#hero" class="font-serif text-base font-semibold tracking-tight">
+      <span class="inline-cn">李菁</span><span class="inline-en">Eva Li</span>
+    </a>
+    <div class="flex items-center gap-6">
+      <div class="hidden md:flex items-center gap-5 text-sm text-muted">
+        <a href="#experience" class="hover:text-ink transition-colors"><span class="inline-cn">实习</span><span class="inline-en">Experience</span></a>
+        <a href="#education" class="hover:text-ink transition-colors"><span class="inline-cn">教育</span><span class="inline-en">Education</span></a>
+        <a href="#projects" class="hover:text-ink transition-colors"><span class="inline-cn">项目</span><span class="inline-en">Projects</span></a>
+        <a href="#skills" class="hover:text-ink transition-colors"><span class="inline-cn">技能</span><span class="inline-en">Skills</span></a>
+      </div>
+      <div class="flex items-center gap-1 border border-border rounded-full px-1 py-1 bg-white">
+        <button class="lang-btn active" id="btn-cn" onclick="setLang('cn')">中</button>
+        <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero" class="pt-32 pb-20 max-w-5xl mx-auto px-6">
+  <div class="fade-up">
+    <p class="section-label"><span class="inline-cn">产品经理 · AI 商业化方向</span><span class="inline-en">Product Manager · AI Commercialization</span></p>
+    <h1 class="font-serif text-6xl md:text-8xl font-bold leading-[1.05] mt-3 mb-6 tracking-tight">
+      <span class="inline-cn">李菁</span><span class="inline-en">Eva Li</span>
+      <span class="block text-accent font-serif italic font-semibold">
+        <span class="inline-cn">/ Eva Li</span><span class="inline-en">/ 李菁</span>
+      </span>
+    </h1>
+    <p class="text-muted text-lg max-w-xl leading-relaxed cn-content">中国传媒大学计算机&广告双学位，即将赴伦敦政治经济学院攻读媒体与传播硕士。专注 AI 产品商业化，具备从数据分析到产品规划的完整经验。</p>
+    <p class="text-muted text-lg max-w-xl leading-relaxed en-content">Double degree in CS & Advertising from Communication University of China. Incoming MSc Media & Communication at LSE. Focused on AI product commercialization with end-to-end experience from data analytics to product planning.</p>
+  </div>
+  <div class="flex flex-wrap gap-4 mt-10 fade-up fade-up-delay-1">
+    <a href="mailto:1967133196@qq.com" class="flex items-center gap-2 px-5 py-3 bg-ink text-paper rounded-full text-sm font-medium hover:bg-accent transition-colors active:scale-95">
+      <i class="ri-mail-line text-base"></i>
+      <span class="inline-cn">发邮件联系</span><span class="inline-en">Get in Touch</span>
+    </a>
+    <a href="tel:18171384226" class="flex items-center gap-2 px-5 py-3 border border-border bg-white text-ink rounded-full text-sm font-medium card-hover">
+      <i class="ri-phone-line text-base text-accent"></i>181-7138-4226
+    </a>
+  </div>
+  <div class="flex flex-wrap gap-3 mt-8 fade-up fade-up-delay-2">
+    <div class="tag tag-accent">GPA 3.81 / 4.00</div>
+    <div class="tag">IELTS 7.0</div><div class="tag">GRE 324</div>
+    <div class="tag tag-accent"><span class="inline-cn">4 段大厂实习</span><span class="inline-en">4 Internships</span></div>
+    <div class="tag"><span class="inline-cn">LSE 2026 入学</span><span class="inline-en">LSE 2026</span></div>
+  </div>
+</section>
+
+<div class="divider max-w-5xl mx-auto px-6"></div>
+
+<!-- EXPERIENCE -->
+<section id="experience" class="py-20 max-w-5xl mx-auto px-6">
+  <div class="fade-up">
+    <p class="section-label"><span class="inline-cn">实习经历</span><span class="inline-en">Work Experience</span></p>
+    <h2 class="font-serif text-4xl font-bold mt-1 mb-10"><span class="inline-cn">工作经历</span><span class="inline-en">Experience</span></h2>
+  </div>
+  <div class="space-y-4">
+
+    <div class="fade-up exp-card bg-white rounded-2xl border border-border overflow-hidden card-hover" onclick="toggleExp(this)">
+      <div class="flex items-start justify-between p-6">
+        <div class="flex gap-4 items-start">
+          <div class="w-10 h-10 rounded-xl bg-[#F0EDE6] flex items-center justify-center flex-shrink-0 mt-0.5"><i class="ri-video-line text-accent text-lg"></i></div>
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <h3 class="font-semibold text-base"><span class="inline-cn">快手 · 可灵 AI 事业部</span><span class="inline-en">Kuaishou · Kling AI Division</span></h3>
+              <span class="tag tag-accent text-xs"><span class="inline-cn">平台产品实习生</span><span class="inline-en">Platform PM Intern</span></span>
+            </div>
+            <p class="text-sm text-muted mt-1">2026.06 — 2026.08</p>
+            <p class="text-sm text-ink mt-2"><span class="inline-cn">可灵开放平台 · B 端视频评测平台 · 产品规划</span><span class="inline-en">Kling Open Platform · B2B Video Evaluation · Product Planning</span></p>
+          </div>
+        </div>
+        <i class="ri-add-line text-muted text-xl exp-toggle-icon flex-shrink-0 mt-1"></i>
+      </div>
+      <div class="exp-body">
+        <div class="px-6 pb-6 border-t border-border pt-5">
+          <ul class="space-y-3 text-sm text-muted leading-relaxed">
+            <li class="flex gap-3"><span class="timeline-dot"></span><span class="cn-content">主导可灵 B 端视频评测平台从 0 到 1 的产品规划，设计评测任务管理、评测集沉淀、生成结果追踪、人工评审工作台、任务级报告等六大核心模块，明确一期 MVP 范围与 P0/P1 优先级排序。</span><span class="en-content">Led 0-to-1 product planning for Kling B2B video evaluation platform. Designed 6 core modules: task management, dataset curation, result tracking, human review workbench, and reporting. Defined MVP scope with P0/P1 priority framework.</span></li>
+            <li class="flex gap-3"><span class="timeline-dot"></span><span class="cn-content">系统调研 Arena.ai、VBench++、Humanlaya 等业界评测平台，输出企业级评测趋势分析报告；梳理 Bradley-Terry 模型与 AI Judge 可行性，形成视频评测方法论文档。</span><span class="en-content">Researched industry platforms (Arena.ai, VBench++, Humanlaya), producing enterprise evaluation trend reports. Documented Bradley-Terry ranking and AI Judge feasibility for video assessment methodology.</span></li>
+            <li class="flex gap-3"><span class="timeline-dot"></span><span class="cn-content">调研主流 AI 视频工具竞品全景（Kling / Seedance / Runway / Veo 等），制定外部模型申请 SOP，打通平台引入竞品模型的内部流程。</span><span class="en-content">Produced competitive landscape analysis of major AI video tools (Kling, Seedance, Runway, Veo). Established competitor model integration SOP to streamline internal evaluation pipeline.</span></li>
+          </ul>
+          <div class="flex flex-wrap gap-2 mt-5"><span class="tag">产品规划</span><span class="tag">B端评测</span><span class="tag">竞品分析</span><span class="tag">AI视频</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fade-up fade-up-delay-1 exp-card bg-white rounded-2xl border border-border overflow-hidden card-hover" onclick="toggleExp(this)">
+      <div class="flex items-start justify-between p-6">
+        <div class="flex gap-4 items-start">
+          <div class="w-10 h-10 rounded-xl bg-[#F0EDE6] flex items-center justify-center flex-shrink-0 mt-0.5"><i class="ri-bar-chart-line text-accent text-lg"></i></div>
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <h3 class="font-semibold text-base"><span class="inline-cn">字节跳动 · Global Monetization</span><span class="inline-en">ByteDance · Global Monetization</span></h3>
+              <span class="tag tag-accent text-xs"><span class="inline-cn">商业化产品运营实习生</span><span class="inline-en">Commercial Product Ops Intern</span></span>
+            </div>
+            <p class="text-sm text-muted mt-1">2025.06 — 2025.10</p>
+            <p class="text-sm text-ink mt-2"><span class="inline-cn">Pangle 广告平台 · iOS IAA/IAP 投放诊断 · BI 工具优化</span><span class="inline-en">Pangle · iOS IAA/IAP Campaign Diagnostics · BI Optimization</span></p>
+          </div>
+        </div>
+        <i class="ri-add-line text-muted text-xl exp-toggle-icon flex-shrink-0 mt-1"></i>
+      </div>
+      <div class="exp-body">
+        <div class="px-6 pb-6 border-t border-border pt-5">
+          <ul class="space-y-3 text-sm text-muted leading-relaxed">
+            <li class="flex gap-3"><span class="timeline-dot"></span><span class="cn-content">支持 Pangle 平台 iOS IAA/IAP 产品投放分析，围绕 CPM、CTR、CPC、转化、留存、ROI 等指标，对 80+ 广告项目进行数据检测与效果复盘。</span><span class="en-content">Supported iOS IAA/IAP campaign analysis for Pangle, monitoring 80+ ad campaigns across CPM, CTR, CPC, conversion, retention, and ROI; identified anomalies in spend, CTR, and revenue.</span></li>
+            <li class="flex gap-3"><span class="timeline-dot"></span><span class="cn-content">基于异常指标拆解广告投放漏斗，定位召回、粗排、精排等环节问题，沉淀"效果复盘-问题定位-配置优化"分析路径，参与大客户 Case 诊断。</span><span class="en-content">Decomposed ad delivery funnels to locate issues across recall, coarse/fine ranking stages. Consolidated "review → diagnosis → config optimization" workflow for key account diagnostics.</span></li>
+            <li class="flex gap-3"><span class="timeline-dot"></span><span class="cn-content">发现 no bid 广告组周末停投问题，定位为周中超预算消耗所致，提出预算平滑策略需求；参与 BI 看板优化，将单项目分析时间缩短 20%。</span><span class="en-content">Identified weekend delivery drop in no-bid campaigns; proposed budget smoothing strategy. Contributed to BI dashboard optimization, reducing per-project analysis time by 20%.</span></li>
+          </ul>
+          <div class="flex flex-wrap gap-2 mt-5"><span class="tag">广告投放分析</span><span class="tag">漏斗诊断</span><span class="tag">需求洞察</span><span class="tag">BI工具</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fade-up fade-up-delay-2 exp-card bg-white rounded-2xl border border-border overflow-hidden card-hover" onclick="toggleExp(this)">
+      <div class="flex items-start justify-between p-6">
+        <div class="flex gap-4 items-start">
+          <div class="w-10 h-10 rounded-xl bg-[#F0EDE6] flex items-center justify-center flex-shrink-0 mt-0.5"><i class="ri-user-heart-line text-accent text-lg"></i></div>
+          <div>
+            <h3 class="font-semibold text-base"><span class="inline-cn">阳狮集团 Digitas · 策略实习生</span><span class="inline-en">Publicis Groupe Digitas · Strategy Intern</span></h3>
+            <p class="text-sm text-muted mt-1">2024.11 — 2025.02</p>
+            <p class="text-sm text-ink mt-2"><span class="inline-cn">雀巢奶粉 CRM 策略 · 用户分层成长机制</span><span class="inline-en">Nestlé CRM Strategy · User Tier Growth Design</span></p>
+          </div>
+        </div>
+        <i class="ri-add-line text-muted text-xl exp-toggle-icon flex-shrink-0 mt-1"></i>
+      </div>
+      <div class="exp-body">
+        <div class="px-6 pb-6 border-t border-border pt-5">
+          <ul class="space-y-3 text-sm text-muted leading-relaxed">
+            <li class="flex gap-3"><span class="timeline-dot"></span><span class="cn-content">基于门店与销售数据，参与雀巢奶粉会员用户分层与等级成长机制设计，梳理不同用户阶段的权益触点与运营策略，支持 2024-2025 年度 CRM 模型搭建。</span><span class="en-content">Contributed to Nestlé baby formula membership tier design based on store/sales data; defined benefit touchpoints and operational strategies across user lifecycle stages for CRM model 2024–2025.</span></li>
+            <li class="flex gap-3"><span class="timeline-dot"></span><span class="cn-content">结合消费者访谈与反馈数据，分析母婴用户购买决策链路，参与营销主题与会员运营策略设计，并基于反馈进行方案迭代。</span><span class="en-content">Analyzed mother-and-infant purchase decision paths through consumer interviews; participated in membership strategy design and iterated based on feedback.</span></li>
+            <li class="flex gap-3"><span class="timeline-dot"></span><span class="cn-content">参与雅高集团企微私域运营规划，搭建运营流程框架，协同品牌方与服务商推进落地。</span><span class="en-content">Contributed to Accor Group's WeChat private domain operations framework, coordinating brand team and service provider rollout.</span></li>
+          </ul>
+          <div class="flex flex-wrap gap-2 mt-5"><span class="tag">CRM策略</span><span class="tag">用户分层</span><span class="tag">私域运营</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fade-up fade-up-delay-3 exp-card bg-white rounded-2xl border border-border overflow-hidden card-hover" onclick="toggleExp(this)">
+      <div class="flex items-start justify-between p-6">
+        <div class="flex gap-4 items-start">
+          <div class="w-10 h-10 rounded-xl bg-[#F0EDE6] flex items-center justify-center flex-shrink-0 mt-0.5"><i class="ri-search-line text-accent text-lg"></i></div>
+          <div>
+            <h3 class="font-semibold text-base"><span class="inline-cn">360集团 · 线上运营实习生</span><span class="inline-en">360 Group · Online Operations Intern</span></h3>
+            <p class="text-sm text-muted mt-1">2024.07 — 2024.10</p>
+            <p class="text-sm text-ink mt-2"><span class="inline-cn">商业平台竞品分析 · 内容运营 · 播放量 15 万+</span><span class="inline-en">Competitor Analysis · Content Ops · 150K+ Views</span></p>
+          </div>
+        </div>
+        <i class="ri-add-line text-muted text-xl exp-toggle-icon flex-shrink-0 mt-1"></i>
+      </div>
+      <div class="exp-body">
+        <div class="px-6 pb-6 border-t border-border pt-5">
+          <ul class="space-y-3 text-sm text-muted leading-relaxed">
+            <li class="flex gap-3"><span class="timeline-dot"></span><span class="cn-content">负责 360 智慧商业平台月度竞品调研，围绕搜索广告平台功能、营销链路、投放转化路径进行拆解，持续输出竞品分析报告。</span><span class="en-content">Conducted monthly competitive intelligence on 360's Smart Business platform, analyzing ad platform features, marketing funnels, and conversion paths.</span></li>
+            <li class="flex gap-3"><span class="timeline-dot"></span><span class="cn-content">参与官方账号内容运营，基于播放量、互动率等指标优化选题与发布节奏，累计发布视频 21 条，各平台播放量 15 万+。</span><span class="en-content">Managed official account content operations; optimized topic selection and posting cadence via analytics; published 21 videos achieving 150K+ cumulative views.</span></li>
+          </ul>
+          <div class="flex flex-wrap gap-2 mt-5"><span class="tag">竞品分析</span><span class="tag">内容运营</span><span class="tag">搜索广告</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider max-w-5xl mx-auto px-6"></div>
+
+<!-- EDUCATION -->
+<section id="education" class="py-20 max-w-5xl mx-auto px-6">
+  <div class="fade-up">
+    <p class="section-label"><span class="inline-cn">教育背景</span><span class="inline-en">Education</span></p>
+    <h2 class="font-serif text-4xl font-bold mt-1 mb-10"><span class="inline-cn">教育背景</span><span class="inline-en">Education</span></h2>
+  </div>
+  <div class="grid md:grid-cols-2 gap-5">
+    <div class="fade-up bg-ink text-paper rounded-2xl p-7 card-hover">
+      <div class="flex items-start justify-between mb-5">
+        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center"><i class="ri-graduation-cap-line text-lg text-paper"></i></div>
+        <span class="text-xs text-white/50 font-medium"><span class="inline-cn">即将入学</span><span class="inline-en">Incoming</span></span>
+      </div>
+      <h3 class="font-serif text-xl font-bold mb-1"><span class="inline-cn">伦敦政治经济学院</span><span class="inline-en">London School of Economics</span></h3>
+      <p class="text-white/60 text-sm"><span class="inline-cn">媒体与传播（数据与社会）· 硕士</span><span class="inline-en">MSc Media & Communication (Data & Society)</span></p>
+      <p class="text-accent text-sm font-medium mt-3">2026.09 — 2027.09</p>
+    </div>
+    <div class="fade-up fade-up-delay-1 bg-white rounded-2xl p-7 border border-border card-hover">
+      <div class="flex items-start justify-between mb-5">
+        <div class="w-10 h-10 rounded-xl bg-[#F0EDE6] flex items-center justify-center"><i class="ri-book-open-line text-accent text-lg"></i></div>
+        <span class="tag tag-accent text-xs"><span class="inline-cn">双学位</span><span class="inline-en">Double Degree</span></span>
+      </div>
+      <h3 class="font-serif text-xl font-bold mb-1"><span class="inline-cn">中国传媒大学</span><span class="inline-en">Communication University of China</span></h3>
+      <p class="text-muted text-sm"><span class="inline-cn">计算机科学 & 广告学（双学位）· 本科</span><span class="inline-en">Computer Science & Advertising (Double Degree) · B.E.</span></p>
+      <p class="text-accent text-sm font-medium mt-3">2022.09 — 2026.07</p>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <div class="tag tag-accent">GPA 3.81 / 4.00</div>
+        <div class="tag"><span class="inline-cn">课程均分 91</span><span class="inline-en">Avg Score 91</span></div>
+      </div>
+      <div class="mt-4">
+        <p class="text-xs text-muted mb-2"><span class="inline-cn">代表性课程</span><span class="inline-en">Selected Courses</span></p>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-xs px-2.5 py-1 bg-[#F0EDE6] rounded-full"><span class="inline-cn">互联网产品设计 97</span><span class="inline-en">Product Design 97</span></span>
+          <span class="text-xs px-2.5 py-1 bg-[#F0EDE6] rounded-full"><span class="inline-cn">数字营销 97</span><span class="inline-en">Digital Marketing 97</span></span>
+          <span class="text-xs px-2.5 py-1 bg-[#F0EDE6] rounded-full"><span class="inline-cn">市场调查 92</span><span class="inline-en">Market Research 92</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider max-w-5xl mx-auto px-6"></div>
+
+<!-- PROJECTS -->
+<section id="projects" class="py-20 max-w-5xl mx-auto px-6">
+  <div class="fade-up">
+    <p class="section-label"><span class="inline-cn">项目经历</span><span class="inline-en">Projects</span></p>
+    <h2 class="font-serif text-4xl font-bold mt-1 mb-10"><span class="inline-cn">项目经历</span><span class="inline-en">Projects</span></h2>
+  </div>
+  <div class="fade-up exp-card bg-white rounded-2xl border border-border overflow-hidden card-hover" onclick="toggleExp(this)">
+    <div class="flex items-start justify-between p-6">
+      <div class="flex gap-4 items-start">
+        <div class="w-10 h-10 rounded-xl bg-[#F0EDE6] flex items-center justify-center flex-shrink-0 mt-0.5"><i class="ri-heart-pulse-line text-accent text-lg"></i></div>
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <h3 class="font-semibold text-base"><span class="inline-cn">「语悦守护」适老化 APP</span><span class="inline-en">"YuYue Care" Elder-Friendly App</span></h3>
+            <span class="tag tag-accent text-xs"><span class="inline-cn">产品负责人</span><span class="inline-en">Product Lead</span></span>
+          </div>
+          <p class="text-sm text-muted mt-1">2024.03 — 2025.03</p>
+          <p class="text-sm text-ink mt-2"><span class="inline-cn">声音克隆 + 定制化语音播报 · 独居老人陪伴场景</span><span class="inline-en">Voice Cloning + Personalized Audio · Elderly Companion App</span></p>
+        </div>
+      </div>
+      <i class="ri-add-line text-muted text-xl exp-toggle-icon flex-shrink-0 mt-1"></i>
+    </div>
+    <div class="exp-body">
+      <div class="px-6 pb-6 border-t border-border pt-5">
+        <ul class="space-y-3 text-sm text-muted leading-relaxed">
+          <li class="flex gap-3"><span class="timeline-dot"></span><span class="cn-content">针对独居老人陪伴场景，完成用户需求分析，设计"声音克隆 + 定制化语音播报"方案，负责产品功能规划、用户流程与交互原型（Sketch），覆盖语音输入、声音克隆、内容播报、亲属配置等核心流程。</span><span class="en-content">Identified elderly companionship scenarios; designed "voice cloning + personalized audio broadcast" solution. Led product feature planning, user flows, and interactive prototyping (Sketch) covering voice input, cloning, broadcast, and family configuration.</span></li>
+          <li class="flex gap-3"><span class="timeline-dot"></span><span class="cn-content">基于 Coze 搭建 AI 工作流，跑通"样本语音输入—声音克隆—音频输出"技术验证链路，验证产品方案可行性。</span><span class="en-content">Built AI workflow on Coze to validate "voice sample → cloning → audio output" technical feasibility pipeline.</span></li>
+        </ul>
+        <div class="flex flex-wrap gap-2 mt-5">
+          <span class="tag tag-accent">🏆 <span class="inline-cn">YOUNG BLUE AWARDS AIGC 佳作奖</span><span class="inline-en">YOUNG BLUE AWARDS AIGC Excellence</span></span>
+          <span class="tag"><span class="inline-cn">中传AI创新大赛三等奖</span><span class="inline-en">CUC AI Innovation 3rd Prize</span></span>
+          <span class="tag">Coze</span><span class="tag">Sketch</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider max-w-5xl mx-auto px-6"></div>
+
+<!-- SKILLS -->
+<section id="skills" class="py-20 max-w-5xl mx-auto px-6">
+  <div class="fade-up">
+    <p class="section-label"><span class="inline-cn">技能 & 语言</span><span class="inline-en">Skills & Languages</span></p>
+    <h2 class="font-serif text-4xl font-bold mt-1 mb-10"><span class="inline-cn">职业技能</span><span class="inline-en">Skills</span></h2>
+  </div>
+  <div class="grid md:grid-cols-3 gap-6">
+    <div class="fade-up bg-white rounded-2xl border border-border p-6">
+      <div class="w-9 h-9 rounded-xl bg-[#F0EDE6] flex items-center justify-center mb-4"><i class="ri-code-s-slash-line text-accent"></i></div>
+      <h3 class="font-semibold mb-4"><span class="inline-cn">数据分析</span><span class="inline-en">Data & Analysis</span></h3>
+      <div class="space-y-3">
+        <div><div class="flex justify-between text-sm mb-1.5"><span>Python</span><span class="text-muted"><span class="inline-cn">熟练</span><span class="inline-en">Proficient</span></span></div><div class="skill-bar"><div class="skill-fill" data-width="0.82"></div></div></div>
+        <div><div class="flex justify-between text-sm mb-1.5"><span>SQL</span><span class="text-muted"><span class="inline-cn">熟练</span><span class="inline-en">Proficient</span></span></div><div class="skill-bar"><div class="skill-fill" data-width="0.80"></div></div></div>
+        <div><div class="flex justify-between text-sm mb-1.5"><span>SPSS / R</span><span class="text-muted"><span class="inline-cn">掌握</span><span class="inline-en">Competent</span></span></div><div class="skill-bar"><div class="skill-fill" data-width="0.70"></div></div></div>
+      </div>
+    </div>
+    <div class="fade-up fade-up-delay-1 bg-white rounded-2xl border border-border p-6">
+      <div class="w-9 h-9 rounded-xl bg-[#F0EDE6] flex items-center justify-center mb-4"><i class="ri-pencil-ruler-line text-accent"></i></div>
+      <h3 class="font-semibold mb-4"><span class="inline-cn">产品设计</span><span class="inline-en">Product Design</span></h3>
+      <div class="space-y-3">
+        <div><div class="flex justify-between text-sm mb-1.5"><span>Sketch</span><span class="text-muted"><span class="inline-cn">熟练</span><span class="inline-en">Proficient</span></span></div><div class="skill-bar"><div class="skill-fill" data-width="0.80"></div></div></div>
+        <div><div class="flex justify-between text-sm mb-1.5"><span><span class="inline-cn">即时设计</span><span class="inline-en">MasterGo</span></span><span class="text-muted"><span class="inline-cn">熟练</span><span class="inline-en">Proficient</span></span></div><div class="skill-bar"><div class="skill-fill" data-width="0.78"></div></div></div>
+        <div><div class="flex justify-between text-sm mb-1.5"><span>Coze / AI</span><span class="text-muted"><span class="inline-cn">掌握</span><span class="inline-en">Competent</span></span></div><div class="skill-bar"><div class="skill-fill" data-width="0.72"></div></div></div>
+      </div>
+    </div>
+    <div class="fade-up fade-up-delay-2 bg-white rounded-2xl border border-border p-6">
+      <div class="w-9 h-9 rounded-xl bg-[#F0EDE6] flex items-center justify-center mb-4"><i class="ri-translate-2 text-accent"></i></div>
+      <h3 class="font-semibold mb-4"><span class="inline-cn">语言能力</span><span class="inline-en">Languages</span></h3>
+      <div class="space-y-4">
+        <div class="flex items-center gap-3"><span class="text-2xl">🇨🇳</span><div><p class="text-sm font-medium"><span class="inline-cn">中文</span><span class="inline-en">Chinese</span></p><p class="text-xs text-muted"><span class="inline-cn">母语</span><span class="inline-en">Native</span></p></div></div>
+        <div class="flex items-center gap-3"><span class="text-2xl">🇬🇧</span><div><p class="text-sm font-medium">English</p><p class="text-xs text-muted">IELTS 7.0 · GRE 324 · CET-6</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider max-w-5xl mx-auto px-6"></div>
+
+<!-- AWARDS -->
+<section class="py-20 max-w-5xl mx-auto px-6">
+  <div class="fade-up">
+    <p class="section-label"><span class="inline-cn">荣誉 & 校园</span><span class="inline-en">Awards & Activities</span></p>
+    <h2 class="font-serif text-4xl font-bold mt-1 mb-10"><span class="inline-cn">获奖经历</span><span class="inline-en">Awards</span></h2>
+  </div>
+  <div class="grid md:grid-cols-2 gap-3">
+    <div class="fade-up award-pill card-hover"><i class="ri-trophy-line text-accent text-base mt-0.5 flex-shrink-0"></i><p class="text-sm"><span class="inline-cn">2025 YOUNG BLUE AWARDS <strong>AIGC 青年赛佳作奖</strong></span><span class="inline-en">2025 YOUNG BLUE AWARDS <strong>AIGC Excellence Award</strong></span></p></div>
+    <div class="fade-up fade-up-delay-1 award-pill card-hover"><i class="ri-trophy-line text-accent text-base mt-0.5 flex-shrink-0"></i><p class="text-sm"><span class="inline-cn">2024 中国传媒大学 <strong>AI 创新大赛三等奖</strong></span><span class="inline-en">2024 CUC <strong>AI Innovation Contest 3rd Prize</strong></span></p></div>
+    <div class="fade-up fade-up-delay-2 award-pill card-hover"><i class="ri-trophy-line text-accent text-base mt-0.5 flex-shrink-0"></i><p class="text-sm"><span class="inline-cn">2025 第四届北京大创 <strong>文化创意赛道三等奖</strong></span><span class="inline-en">2025 Beijing Innovation Contest <strong>Cultural Creativity 3rd Prize</strong></span></p></div>
+    <div class="fade-up fade-up-delay-3 award-pill card-hover"><i class="ri-trophy-line text-accent text-base mt-0.5 flex-shrink-0"></i><p class="text-sm"><span class="inline-cn">2025 ECL Young Awards <strong>初赛优秀奖</strong></span><span class="inline-en">2025 ECL Young Awards <strong>Preliminary Excellent Award</strong></span></p></div>
+    <div class="fade-up award-pill card-hover"><i class="ri-medal-line text-accent text-base mt-0.5 flex-shrink-0"></i><p class="text-sm"><span class="inline-cn">2024-2025 学年 <strong>校三等奖学金</strong></span><span class="inline-en">2024–2025 <strong>University Third-Class Scholarship</strong></span></p></div>
+    <div class="fade-up fade-up-delay-1 award-pill card-hover"><i class="ri-group-line text-accent text-base mt-0.5 flex-shrink-0"></i><p class="text-sm"><span class="inline-cn">中传广告学院 <strong>辩论队队长</strong> · 校团委宣媒部干事</span><span class="inline-en">CUC Advertising School <strong>Debate Team Captain</strong> · Student Union Media Dept.</span></p></div>
+    <div class="fade-up fade-up-delay-2 award-pill card-hover"><i class="ri-funds-line text-accent text-base mt-0.5 flex-shrink-0"></i><p class="text-sm"><span class="inline-cn">2025 京彩大创 <strong>省级立项主要成员</strong></span><span class="inline-en">2025 Beijing Innovation Fund <strong>Provincial Project Core Member</strong></span></p></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="border-t border-border py-12">
+  <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+    <div>
+      <p class="font-serif text-lg font-semibold"><span class="inline-cn">李菁 · Eva Li</span><span class="inline-en">Eva Li · 李菁</span></p>
+      <p class="text-sm text-muted mt-1"><span class="inline-cn">产品经理 · AI 商业化方向</span><span class="inline-en">Product Manager · AI Commercialization</span></p>
+    </div>
+    <div class="flex gap-4">
+      <a href="mailto:1967133196@qq.com" class="w-10 h-10 rounded-full border border-border bg-white flex items-center justify-center text-muted hover:text-accent hover:border-accent transition-colors"><i class="ri-mail-line"></i></a>
+      <a href="tel:18171384226" class="w-10 h-10 rounded-full border border-border bg-white flex items-center justify-center text-muted hover:text-accent hover:border-accent transition-colors"><i class="ri-phone-line"></i></a>
+    </div>
+  </div>
+  <div class="max-w-5xl mx-auto px-6 mt-6 pt-6 border-t border-border">
+    <p class="text-xs text-muted"><span class="inline-cn">© 2026 李菁 · 个人作品集</span><span class="inline-en">© 2026 Eva Li · Personal Portfolio</span></p>
+  </div>
+</footer>
+
+<script>
+function setLang(lang) {
+  const body = document.body;
+  if (lang === 'en') {
+    body.classList.add('lang-en');
+    document.getElementById('btn-en').classList.add('active');
+    document.getElementById('btn-cn').classList.remove('active');
+    document.documentElement.lang = 'en';
+  } else {
+    body.classList.remove('lang-en');
+    document.getElementById('btn-cn').classList.add('active');
+    document.getElementById('btn-en').classList.remove('active');
+    document.documentElement.lang = 'zh-CN';
+  }
+}
+function toggleExp(card) {
+  const body = card.querySelector('.exp-body');
+  const isOpen = card.classList.contains('open');
+  document.querySelectorAll('.exp-card').forEach(c => {
+    c.classList.remove('open');
+    c.querySelector('.exp-body').classList.remove('open');
+  });
+  if (!isOpen) { card.classList.add('open'); body.classList.add('open'); }
+}
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+const skillObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.skill-fill').forEach(f => { f.style.transform = `scaleX(${f.getAttribute('data-width')})`; });
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('#skills').forEach(el => skillObserver.observe(el));
+</script>
+<script type="text/javascript" src="/accessproxy_statics/h5_fp.js" defer></script>
+<script type="text/javascript" src="/accessproxy_statics/wm.js" defer></script>
+</body>
+</html>
